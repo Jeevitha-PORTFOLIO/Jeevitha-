@@ -1,0 +1,122 @@
+// Animation on scroll
+document.addEventListener('DOMContentLoaded', function() {
+    const animatedElements = document.querySelectorAll('.animate-on-scroll');
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, {
+        threshold: 0.1
+    });
+    
+    animatedElements.forEach(element => {
+        observer.observe(element);
+    });
+    
+    // Smooth scrolling for navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const targetId = this.getAttribute('href');
+            const targetElement = document.querySelector(targetId);
+            
+            if (targetElement) {
+                window.scrollTo({
+                    top: targetElement.offsetTop - 80,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+    
+    // Add floral elements animation
+    const floralBackgrounds = document.querySelectorAll('.floral-bg');
+    floralBackgrounds.forEach((bg, index) => {
+        bg.style.animation = `float ${6 + index * 2}s ease-in-out infinite`;
+    });
+    
+    // Form submission handling
+    const contactForm = document.querySelector('.contact-form form');
+    if (contactForm) {
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+            
+            // Simple validation
+            if (!name || !email || !message) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            // Email validation
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(email)) {
+                alert('Please enter a valid email address');
+                return;
+            }
+            
+            // In a real application, you would send the form data to a server here
+            // For this example, we'll just show a success message
+            alert('Thank you for your message! I will get back to you soon.');
+            contactForm.reset();
+        });
+    }
+    
+    // Additional animations for floral elements
+    function createFloatingFlorals() {
+        const floralIcons = ['fa-leaf', 'fa-spa', 'fa-seedling', 'fa-feather', 'fa-tree'];
+        const colors = ['#ff4d8d', '#9c27b0', '#4CAF50', '#FF9800', '#2196F3'];
+        
+        for (let i = 0; i < 15; i++) {
+            const floral = document.createElement('i');
+            floral.className = `fas ${floralIcons[Math.floor(Math.random() * floralIcons.length)]}`;
+            
+            // Random properties
+            const size = Math.random() * 30 + 10;
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            
+            // Apply styles
+            floral.style.position = 'fixed';
+            floral.style.fontSize = `${size}px`;
+            floral.style.color = color;
+            floral.style.opacity = '0.3';
+            floral.style.zIndex = '-1';
+            floral.style.left = `${Math.random() * 100}vw`;
+            floral.style.top = `${Math.random() * 100}vh`;
+            
+            // Add to body
+            document.body.appendChild(floral);
+            
+            // Animate
+            animateFloral(floral);
+        }
+    }
+    
+    function animateFloral(floral) {
+        const duration = Math.random() * 10 + 5;
+        
+        floral.animate(
+            [
+                { transform: 'translateY(0) rotate(0deg)' },
+                { transform: `translateY(${Math.random() * 100 - 50}vh) rotate(${Math.random() * 360}deg)` }
+            ],
+            {
+                duration: duration * 1000,
+                iterations: Infinity,
+                direction: 'alternate',
+                easing: 'ease-in-out'
+            }
+        );
+    }
+    
+    // Create floating floral elements
+    createFloatingFlorals();
+});
